@@ -143,6 +143,18 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+export const checkAuth = async (req, res) => {
+  try {
+  const user = await User.findById(req.userId).select("-password");
+  if (!user) {
+      return res.status(401).json({ message: "Unauthorized - User not found" });
+    }
+    res.status(200).json({ message: "Authenticated", user});
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export const logout = (req, res) => {
   res.clearCookie("authToken");
   res.status(200).json({ message: "Logged out successfully" });
