@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Input from "./Input";
 import { User, Mail, Lock } from "lucide-react";
+import { PasswordStrengthSection } from "./PasswordStrength/PasswordStrengthSection";
 
 const SignupPage = () => {
   const [name, setName] = useState('');
@@ -21,6 +22,8 @@ const SignupPage = () => {
         <Input icon={Lock} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
         <button type="submit" className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Create Account</button>
+
+        <PasswordStrengthSection password={password} />
 
         <div className="flex items-center justify-center border-t border-gray-200 pt-4">
             <p className="text-sm text-center">Already have an account? <a className="text-emerald-600 hover:text-emerald-700" href="/login">Login</a></p>
