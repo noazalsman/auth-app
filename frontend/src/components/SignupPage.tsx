@@ -1,12 +1,14 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Input from "./Input";
-import { User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock, Loader } from "lucide-react";
 import { PasswordStrengthSection } from "./PasswordStrength/PasswordStrengthSection";
 
 const SignupPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -23,10 +25,12 @@ const SignupPage = () => {
 
         <PasswordStrengthSection password={password} />
 
-        <button type="submit" className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700">Sign Up</button>
+        <button type="submit" disabled={isLoading} className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:hover:bg-emerald-600">
+            {isLoading ? <Loader className="w-4 h-4 animate-spin mx-auto" /> : "Sign Up"}
+        </button>
 
         <div className="flex items-center justify-center border-t border-gray-200 pt-4">
-            <p className="text-sm text-center">Already have an account? <a className="text-emerald-600 hover:text-emerald-700" href="/login">Login</a></p>
+            <p className="text-sm text-center">Already have an account? <Link className="text-emerald-600 hover:text-emerald-700" to="/login">Login</Link></p>
         </div>
     </form>
   )
