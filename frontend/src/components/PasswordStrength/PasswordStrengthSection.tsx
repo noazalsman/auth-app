@@ -10,7 +10,7 @@ export const PasswordStrengthSection = ({password}: {password: string}) => {
     }
 
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 p-2">
             <div className="space-y-1">
                 <div className="flex items-center justify-between">
                     <h2 className="text-xs font-medium text-gray-500">Password Strength</h2>
