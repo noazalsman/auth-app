@@ -9,8 +9,7 @@ const SignupPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { signup, error } = useAuthStore();
-  const isLoading =  true;
+  const { signup, isLoading, error } = useAuthStore();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,8 +17,8 @@ const SignupPage = () => {
     try {
       await signup(name, email, password);
       navigate("/email-verification");
-    } catch (error) {
-      console.error("Error signing up", error);
+    } catch (err) {
+      console.error("Error signing up", err);
     }
   }
 

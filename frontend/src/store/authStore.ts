@@ -9,6 +9,7 @@ interface AuthStore {
     isCheckingAuth: boolean;
 
     signup: (name: string, email: string, password: string) => Promise<void>;
+    verifyEmail: (token: string) => Promise<void>;
 }
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -33,4 +34,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
             throw error;
         }
     },
+    verifyEmail: async (token: string) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(`${API_URL}/verify-email`, { token });
+            set({ user: response.data.user, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+            // @ts-expect-error - axios error type is not typed
+            set({ error: error.response?.data?.message || "An error occurred", isLoading: false });
+            throw error;
+        }
+    }
 }));

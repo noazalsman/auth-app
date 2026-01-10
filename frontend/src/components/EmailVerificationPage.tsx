@@ -1,11 +1,15 @@
 import { useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { useAuthStore } from "../store/authStore";
 
 export const EmailVerificationPage = () => {
     const [code, setCode] = useState<string[]>(Array(6).fill(""));
-    const [isLoading] = useState(false);
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-
+    const { verifyEmail, isLoading, error } = useAuthStore();
+    const navigate = useNavigate();
+    
     const handleChange = (index: number, value: string) => {
         // Only allow single digit
         const digit = value.slice(-1);
@@ -55,7 +59,13 @@ export const EmailVerificationPage = () => {
         
         if (verificationCode.length !== 6) return;
         
-        console.log("Verifying code:", verificationCode);
+        try {
+            await verifyEmail(verificationCode);
+            toast.success("Email verified successfully");
+            navigate("/");
+        } catch (err) {
+            console.error("Error verifying email", err);
+        }
     };
 
     const isComplete = code.every(digit => digit !== "");
@@ -88,6 +98,8 @@ export const EmailVerificationPage = () => {
                         />
                     ))}
                 </div>
+
+                {error && <p className="text-red-500 text-sm">{error}</p>}
 
                 <button
                     type="submit"
