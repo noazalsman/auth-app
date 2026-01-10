@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Loader } from "lucide-react";
-import Input from "./Input";
-import { PasswordStrengthSection } from "./PasswordStrength/PasswordStrengthSection";
+import Input from "../components/Input";
+import { PasswordStrengthSection } from "../components/PasswordStrength/PasswordStrengthSection";
 import { useAuthStore } from "../store/authStore";
 
 const SignupPage = () => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Input from "./Input";
+import Input from "../components/Input";
 import { Mail, Lock, Loader } from "lucide-react";
 
 const LoginPage = () => {

@@ -1,8 +1,16 @@
 import { create } from "zustand";
 import axios from "axios"
 
+export interface User {
+    _id: string;
+    name: string;
+    email: string;
+    isVerified: boolean;
+    lastLogin: Date;
+}
+
 interface AuthStore {
-    user: object | null;
+    user: User | null;
     isAuthenticated: boolean;
     error: string | null;
     isLoading: boolean;
@@ -10,6 +18,7 @@ interface AuthStore {
 
     signup: (name: string, email: string, password: string) => Promise<void>;
     verifyEmail: (token: string) => Promise<void>;
+    checkAuth: () => Promise<void>;
 }
 
 const API_URL = "http://localhost:3000/api/auth";
@@ -43,6 +52,15 @@ export const useAuthStore = create<AuthStore>((set) => ({
             // @ts-expect-error - axios error type is not typed
             set({ error: error.response?.data?.message || "An error occurred", isLoading: false });
             throw error;
+        }
+    },
+    checkAuth: async () => {
+        set({ isCheckingAuth: true, error: null });
+        try {
+            const response = await axios.get(`${API_URL}/check-auth`);
+            set({ user: response.data.user, isAuthenticated: true, isCheckingAuth: false });
+        } catch {
+            set({ error: null, isCheckingAuth: false, isAuthenticated: false });
         }
     }
 }));
