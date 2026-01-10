@@ -7,6 +7,7 @@ export interface User {
     email: string;
     isVerified: boolean;
     lastLogin: Date;
+    createdAt: Date;
 }
 
 interface AuthStore {
@@ -17,6 +18,8 @@ interface AuthStore {
     isCheckingAuth: boolean;
 
     signup: (name: string, email: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
+    logout: () => Promise<void>;
     verifyEmail: (token: string) => Promise<void>;
     checkAuth: () => Promise<void>;
 }
@@ -39,7 +42,29 @@ export const useAuthStore = create<AuthStore>((set) => ({
             set({ user: response.data.user, isAuthenticated: true, isLoading: false });
         } catch (error) {
             // @ts-expect-error - axios error type is not typed
-            set({ error: error.response?.data?.message || "An error occurred", isLoading: false });
+            set({ error: error.response?.data?.message || "Error signing up", isLoading: false });
+            throw error;
+        }
+    },
+    login: async (email: string, password: string) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await axios.post(`${API_URL}/login`, { email, password });
+            set({ user: response.data.user, isAuthenticated: true, isLoading: false });
+        } catch (error) {
+            // @ts-expect-error - axios error type is not typed
+            set({ error: error.response?.data?.message || "Error logging in", isLoading: false });
+            throw error;
+        }
+    },
+    logout: async () => {
+        set({ isLoading: true, error: null });
+        try {
+            await axios.post(`${API_URL}/logout`);
+            set({ user: null, isAuthenticated: false, isLoading: false });
+        } catch (error) {
+            // @ts-expect-error - axios error type is not typed
+            set({ error: error.response?.data?.message || "Error logging out", isLoading: false });
             throw error;
         }
     },
@@ -50,7 +75,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
             set({ user: response.data.user, isAuthenticated: true, isLoading: false });
         } catch (error) {
             // @ts-expect-error - axios error type is not typed
-            set({ error: error.response?.data?.message || "An error occurred", isLoading: false });
+            set({ error: error.response?.data?.message || "Error verifying email", isLoading: false });
             throw error;
         }
     },
