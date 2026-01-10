@@ -1,18 +1,26 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import Input from "./Input";
+import { Link, useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Loader } from "lucide-react";
+import Input from "./Input";
 import { PasswordStrengthSection } from "./PasswordStrength/PasswordStrengthSection";
+import { useAuthStore } from "../store/authStore";
 
 const SignupPage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading] = useState(false);
+  const { signup, error } = useAuthStore();
+  const isLoading =  true;
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(name, email, password);
+    try {
+      await signup(name, email, password);
+      navigate("/email-verification");
+    } catch (error) {
+      console.error("Error signing up", error);
+    }
   }
 
   return (
@@ -23,10 +31,12 @@ const SignupPage = () => {
         <Input icon={Mail} type="email" placeholder="Email Address" value={email} onChange={(e) => setEmail(e.target.value)} />
         <Input icon={Lock} type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <PasswordStrengthSection password={password} />
 
-        <button type="submit" disabled={isLoading} className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:hover:bg-emerald-600">
-            {isLoading ? <Loader className="w-4 h-4 animate-spin mx-auto" /> : "Sign Up"}
+        <button type="submit" disabled={isLoading} className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700">
+            {isLoading ? <Loader size={24} className="animate-spin mx-auto" /> : "Sign Up"}
         </button>
 
         <div className="flex items-center justify-center border-t border-gray-200 pt-4">

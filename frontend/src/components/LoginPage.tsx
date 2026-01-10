@@ -24,8 +24,8 @@ const LoginPage = () => {
             <Link to="/forgot-password" className="text-sm text-center text-emerald-600 hover:text-emerald-700">Forgot password?</Link>
         </div>
         
-        <button type="submit" disabled={isLoading} className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700 disabled:hover:bg-emerald-600">
-            {isLoading ? <Loader className="w-4 h-4 animate-spin mx-auto" /> : "Login"}
+        <button type="submit" disabled={isLoading} className="w-full py-2 px-4 bg-emerald-600 text-white rounded-md hover:bg-emerald-700">
+            {isLoading ? <Loader size={24} className="animate-spin mx-auto" /> : "Login"}
         </button>
         
         <div className="flex items-center justify-center border-t border-gray-200 pt-4">
